@@ -118,6 +118,16 @@ function removePlaylist(id) {
 }
 
 function createPlaylist(name, id) {
+  if(searchId(id, player.playlists) >= 0) throw "id not valid";
+  if (id === undefined){
+    id = 0;
+    while (searchId(id, player.songs) >= 0)
+    {
+      id++;
+    } 
+  }
+  player.playlists.push({id: id, name: name, songs:[]})
+  return id;
   // your code here
 }
 

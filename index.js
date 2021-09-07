@@ -51,20 +51,69 @@ const player = {
     console.log(/* your code here */)
   },
 }
-
+function convertDur (num){   //helping function
+  let mm = 0;
+  let h = "00";
+  while (num > 60){
+    num -= 60;
+    mm++;
+  }
+    if (mm < 10)
+    mm = "0"+mm.toString();
+    else
+    mm.toString();
+    if (num < 10)
+    num = "0"+num.toString();
+    else
+    num.toString();
+    return h + ":" + mm + ":" + num;
+  
+}
+function convertToSec (dur){   //helping function
+  dur = dur.split(":");
+  dur[0] = Number(dur[0]);
+  dur[1]= Number(dur[1]);
+  return dur[0] * 60 + dur[1];
+}
+function searchId (id, objArr){         //helping function
+  for(let i = 0; i < objArr.length; i++){
+    if (objArr[i].id === id)
+    return i
+  }
+  return -1;
+}
 function playSong(id) {
   // your code here
 }
 
 function removeSong(id) {
+ if (searchId(id, player.songs) === -1) throw "id not valid";
+  player.songs.splice(searchId(id, player.songs), 1);
+  for (let i = 0; i < player.playlists.length; i++) {
+   if (player.playlists[i].songs.indexOf(id) >= 0)
+   player.playlists[i].songs.splice(player.playlists[i].songs.indexOf(id), 1)
+  }
   // your code here
 }
 
 function addSong(title, album, artist, duration, id) {
-  // your code here
+  if (searchId(id, player.songs) >= 0) throw "id not valid";
+  if (id === undefined){
+    id = 0;
+    while (searchId(id, player.songs) >= 0)
+    {
+      id++;
+    }
+  }
+ player.songs.push({"id": id, "title": title, "album": album, "artist": artist, "duration": convertToSec(duration)});
+  return id;// your code here
 }
 
 function removePlaylist(id) {
+  let index = searchId(id, player.playlists);
+    if (index === -1) throw "id not valid";
+    else
+    player.playlists.splice(index, 1);
   // your code here
 }
 

@@ -48,25 +48,23 @@ const player = {
     { id: 5, name: 'Israeli', songs: [4, 5] },
   ],
   playSong(song) {
-    console.log(/* your code here */)
+    console.log("Playing "+song.title+" from " +song.album+" by "+song.artist+" | "+convertDur(song.duration)+".");
   },
 }
 function convertDur (num){   //helping function
+  let ss = num;
   let mm = 0;
-  let h = "00";
-  while (num > 60){
-    num -= 60;
+  while (ss > 60){
+    ss -= 60;
     mm++;
   }
-    if (mm < 10)
-    mm = "0"+mm.toString();
-    else
-    mm.toString();
-    if (num < 10)
-    num = "0"+num.toString();
-    else
-    num.toString();
-    return h + ":" + mm + ":" + num;
+    if (mm < 10){
+    mm = "0"+mm;
+    }
+    if (ss < 10){
+    ss = "0"+ss;
+    }
+    return mm + ":" + ss;
   
 }
 function convertToSec (dur){   //helping function
@@ -83,6 +81,9 @@ function searchId (id, objArr){         //helping function
   return -1;
 }
 function playSong(id) {
+  let index = searchId(id, player.songs)
+  if (index === -1) throw "id not valid";
+  player.playSong(player.songs[index]);
   // your code here
 }
 
@@ -132,14 +133,39 @@ function createPlaylist(name, id) {
 }
 
 function playPlaylist(id) {
+  let index = searchId(id, player.playlists);
+  if (index === -1) throw "id not valid";
+  let arrS = player.playlists[index].songs;
+  for (let i = 0; i<arrS.length; i++){
+    playSong(arrS[i]);
+  }
   // your code here
 }
 
 function editPlaylist(playlistId, songId) {
+  if (searchId(songId, player.songs) === -1) throw "id not valid";
+  let songArr = player.playlists[searchId(playlistId, player.playlists)].songs;
+  let index = songArr.indexOf(songId);
+  if (index >= 0){
+     songArr.splice(index, 1);
+  }
+  else 
+  songArr.push(songId);
+  if (songArr[0] === undefined)
+  player.playlists.splice(searchId(playlistId, player.playlists), 1)
   // your code here
 }
 
 function playlistDuration(id) {
+  let counter = 0;
+  let index = searchId(id, player.playlists);
+  let indexS;
+  let arrS = player.playlists[index].songs;
+  for (let i = 0; i < arrS.length; i++){
+    indexS = searchId(arrS[i], player.songs);
+    counter = counter + player.songs[indexS].duration;
+  }
+  return counter;
   // your code here
 }
 

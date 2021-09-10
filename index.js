@@ -51,6 +51,15 @@ const player = {
     console.log("Playing "+song.title+" from " +song.album+" by "+song.artist+" | "+convertDur(song.duration)+".");
   },
 }
+function compare(a, b){
+  let x = a.title.toUpperCase();
+    let y = b.title.toUpperCase();
+    if (x<y)
+    return -1;
+    if(x>y)
+    return 1;
+    return 0;
+}
 function convertDur (num){   //helping function
   let ss = num;
   let mm = 0;
@@ -170,10 +179,50 @@ function playlistDuration(id) {
 }
 
 function searchByQuery(query) {
+  let queryResult ={
+    songs: [],
+    playlists: []
+  }
+  for (let i = 0; i<player.songs.length; i++){
+    if(((player.songs[i].title+player.songs[i].album+player.songs[i].artist).toUpperCase()).includes(query.toUpperCase()))
+    queryResult.songs.push(player.songs[i])
+  }
+  for(let j = 0; j<player.playlists.length; j++){
+    if((player.playlists[j].name.toUpperCase()).includes(query.toUpperCase()))
+    queryResult.playlists.push(player.playlists[j])
+  }
+  queryResult.songs.sort(function(a, b)
+  {
+    let x = a.title.toUpperCase();
+    let y = b.title.toUpperCase();
+    if (x<y)
+    return -1;
+    if(x>y)
+    return 1;
+    return 0;
+  });
+  queryResult.playlists.sort(compare);
+  return queryResult;
   // your code here
 }
 
 function searchByDuration(duration) {
+  let secDur = convertToSec(duration);
+  let minDur = 100000000000;
+  let minObj;
+  for (let i = 0; i < player.songs.length; i++){
+      if(Math.abs(player.songs[i].duration - secDur) < minDur){
+        minDur = Math.abs(player.songs[i].duration - secDur);
+        minObj = player.songs[i];
+      }
+  }
+  for (let i = 0; i < player.playlists.length; i++){
+    if(Math.abs(playlistDuration(player.playlists[i].id) - secDur) < minDur){
+      minDur = Math.abs(playlistDuration(player.playlists[i].id) - secDur);
+      minObj = player.playlists[i];
+    }
+}
+return minObj;
   // your code here
 }
 

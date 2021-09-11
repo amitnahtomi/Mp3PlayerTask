@@ -131,7 +131,7 @@ function createPlaylist(name, id) {
   if(searchId(id, player.playlists) >= 0) throw "id not valid";
   if (id === undefined){
     id = 0;
-    while (searchId(id, player.songs) >= 0)
+    while (searchId(id, player.playlists) >= 0)
     {
       id++;
     } 
@@ -157,11 +157,12 @@ function editPlaylist(playlistId, songId) {
   let index = songArr.indexOf(songId);
   if (index >= 0){
      songArr.splice(index, 1);
+     if (songArr[0] === undefined){
+     player.playlists.splice(searchId(playlistId, player.playlists), 1)
+     }
   }
   else 
   songArr.push(songId);
-  if (songArr[0] === undefined)
-  player.playlists.splice(searchId(playlistId, player.playlists), 1)
   // your code here
 }
 

@@ -51,7 +51,7 @@ const player = {
     console.log("Playing "+song.title+" from " +song.album+" by "+song.artist+" | "+convertDur(song.duration)+".");
   },
 }
-function compare(a, b){
+function compare(a, b){    //helping function
   let x = a.title.toUpperCase();
     let y = b.title.toUpperCase();
     if (x<y)
@@ -184,23 +184,14 @@ function searchByQuery(query) {
     playlists: []
   }
   for (let i = 0; i<player.songs.length; i++){
-    if(((player.songs[i].title+player.songs[i].album+player.songs[i].artist).toUpperCase()).includes(query.toUpperCase()))
+    if(((player.songs[i].title + player.songs[i].album + player.songs[i].artist).toUpperCase()).includes(query.toUpperCase()))
     queryResult.songs.push(player.songs[i])
   }
   for(let j = 0; j<player.playlists.length; j++){
     if((player.playlists[j].name.toUpperCase()).includes(query.toUpperCase()))
     queryResult.playlists.push(player.playlists[j])
   }
-  queryResult.songs.sort(function(a, b)
-  {
-    let x = a.title.toUpperCase();
-    let y = b.title.toUpperCase();
-    if (x<y)
-    return -1;
-    if(x>y)
-    return 1;
-    return 0;
-  });
+  queryResult.songs.sort(compare);
   queryResult.playlists.sort(compare);
   return queryResult;
   // your code here
